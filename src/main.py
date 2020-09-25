@@ -27,7 +27,7 @@ def main():
     dry_run = parsed_args.dry_run
 
     file_names = natsorted(listdir(directory))
-    episode_precision = ceil(log10(len(file_names)))
+    episode_precision = ceil(log10(len(file_names) + 1))
     current_episode = 1
 
     for file_name in file_names:
