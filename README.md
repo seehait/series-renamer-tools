@@ -1,9 +1,16 @@
 # Series Renamer
 
+[![Travis](https://travis-ci.com/seehait/series-renamer-tools.svg?branch=master)](https://travis-ci.com/seehait/series-renamer-tools)
+[![GitHub license](https://img.shields.io/github/license/seehait/series-renamer-tools.svg)](https://github.com/seehait/series-renamer-tools/blob/master/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/series-renamer-tools.svg)](https://pypi.org/project/series-renamer-tools)
+
+Bulk changing file names into prettier format.
+
 ## Table of Contents
 
 - [Requirement](#requirement)
 - [Installation](#installation)
+  - [Installing from PyPI](#installing-from-pypi)
   - [Installing from Git](#installing-from-git)
 - [Usage](#usage)
   - [Options](#options)
@@ -15,6 +22,12 @@
 - Python 3.6+
 
 ## Installation
+
+### Installing from PyPI
+
+```sh
+sudo pip3 install series-renamer-tools
+```
 
 ### Installing from Git
 
