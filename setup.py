@@ -11,7 +11,7 @@ setup(
     version='1.0.1',
     packages=find_packages(),
     install_requires=["natsort==7.0.1"],
-    url='https://github.com/seehait/series-renamer',
+    url='https://github.com/seehait/series-renamer-tools',
     entry_points={
         'console_scripts': ['series-renamer=src.main:main'],
     },
