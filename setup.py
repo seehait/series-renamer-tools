@@ -3,7 +3,7 @@ import os.path
 from setuptools import find_packages, setup
 
 setup(
-    name='series-renamer',
+    name='series-renamer-tools',
     description='Series Renamer: rename files of series with respect to episode number.',
     long_description=open(os.path.join(
         os.path.dirname(__file__), 'README.md')).read(),
