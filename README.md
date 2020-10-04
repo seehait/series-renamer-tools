@@ -34,3 +34,6 @@ series-renamers --directory [path/to/target/directory] --prefix 'Series S01 E' [
 | `--directory`, `-d` | `string`  | path to target directory | `false`  | current directory |
 | `--prefix`, `-p`    | `string`  | new file name prefix     | `true`   |                   |
 | `--dry-run`, `-dr`  | `boolean` | only preview the results | `false`  | `false`           |
+
+## License
+MIT License
