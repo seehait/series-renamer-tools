@@ -1,4 +1,4 @@
-# Series Renamer
+# Series Renamer Tools
 
 [![Travis](https://travis-ci.com/seehait/series-renamer-tools.svg?branch=master)](https://travis-ci.com/seehait/series-renamer-tools)
 [![GitHub license](https://img.shields.io/github/license/seehait/series-renamer-tools.svg)](https://github.com/seehait/series-renamer-tools/blob/master/LICENSE)

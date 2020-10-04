@@ -8,7 +8,7 @@ setup(
     long_description=open(os.path.join(
         os.path.dirname(__file__), 'README.md')).read(),
     long_description_content_type='text/markdown',
-    version='1.0.2',
+    version='1.0.3',
     packages=find_packages(),
     install_requires=["natsort==7.0.1"],
     url='https://github.com/seehait/series-renamer-tools',
