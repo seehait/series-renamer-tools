@@ -50,4 +50,4 @@ series-renamers --directory [path/to/target/directory] --prefix 'Series S01 E' [
 
 ## License
 
-Series Renamer Tools is an open-source tool licensed under [MIT License](https://github.com/kartikeysingh6/series-renamer-tools/blob/master/LICENSE).
+Series Renamer Tools is an open-source tool licensed under [MIT License](LICENSE).
