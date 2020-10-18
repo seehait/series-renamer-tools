@@ -20,7 +20,7 @@ def parse_args(argv):
     return parser.parse_args(argv)
 
 
-def calculate_new_file_name(full_path, current_episode, episode_precision):
+def calculate_new_file_name(prefix, full_path, current_episode, episode_precision):
     extension = Path(full_path).suffix
     formatted_episode_number = f"{current_episode}".zfill(
         episode_precision)
@@ -47,7 +47,7 @@ def main():
         if not path.isfile(full_path):
             continue
             
-        new_file_name = calculate_new_file_name(full_path, current_episode, episode_precision)
+        new_file_name = calculate_new_file_name(prefix, full_path, current_episode, episode_precision)
         current_episode += 1
         print(f"{file_name}\t=>\t{new_file_name}")
 
