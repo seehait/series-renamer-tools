@@ -28,6 +28,10 @@ def calculate_new_file_name(full_path, current_episode, episode_precision):
     return f"{prefix}{formatted_episode_number}{extension}"
 
 
+def calculate_episode_precision(file_names):
+    return ceil(log10(len(file_names) + 1))
+
+
 def main():
     parsed_args = parse_args(argv[1:])
     directory = path.realpath(parsed_args.directory)
@@ -35,7 +39,7 @@ def main():
     dry_run = parsed_args.dry_run
 
     file_names = natsorted(listdir(directory))
-    episode_precision = ceil(log10(len(file_names) + 1))
+    episode_precision = calculate_episode_precision(file_names)
     current_episode = 1
 
     for file_name in file_names:
