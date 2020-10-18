@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.4] - 2020-10-04
+### Changed
+
+- Refactor codes to improve readability
+- Improve readme file
+
 ## [1.0.3] - 2020-10-04
 
 ## [1.0.2] - 2020-10-04
@@ -19,7 +25,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Initial open source release
 
-[unreleased]: https://github.com/seehait/series-renamer/compare/1.0.3...HEAD
+[unreleased]: https://github.com/seehait/series-renamer/compare/1.0.4...HEAD
+[1.0.4]: https://github.com/seehait/seehait/series-renamer/compare/1.0.3...1.0.4
 [1.0.3]: https://github.com/seehait/seehait/series-renamer/compare/1.0.2...1.0.3
 [1.0.2]: https://github.com/seehait/seehait/series-renamer/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/seehait/seehait/series-renamer/compare/1.0.0...1.0.1
