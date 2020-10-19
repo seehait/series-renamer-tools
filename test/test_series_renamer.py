@@ -27,21 +27,26 @@ class SeriesRenamerTestsBaseClass(TestCase):
             self.fs.create_file(file_path)
             self.assertTrue(path.exists(file_path))
 
-    def validate_new_file_creation(self, episode_number, file_index):
+    def validate_old_file_name_deletion(self, file_index):
         original_file_path = self.build_checked_file_path(file_index)
-        updated_file_path = self.build_expected_file_path(episode_number)
         if self.user_input.dry_run:
             self.assertTrue(path.exists(original_file_path))
-            self.assertFalse(path.exists(updated_file_path))
         else:
             self.assertFalse(path.exists(original_file_path))
+
+    def validate_new_file_name_creation(self, episode_number):
+        updated_file_path = self.build_expected_file_path(episode_number)
+        if self.user_input.dry_run:
+            self.assertFalse(path.exists(updated_file_path))
+        else:
             self.assertTrue(path.exists(updated_file_path))
 
     def validate_format_change(self, number_of_files):
         number_of_expected_file_digits = len(str(number_of_files))
         for file_index in range(number_of_files):
             episode_number = f"{file_index + 1}".zfill(number_of_expected_file_digits)
-            self.validate_new_file_creation(episode_number, file_index)
+            self.validate_old_file_name_deletion(file_index)
+            self.validate_new_file_name_creation(episode_number)
 
 
 class TestSeriesRenamerNotInDryMode(SeriesRenamerTestsBaseClass):
