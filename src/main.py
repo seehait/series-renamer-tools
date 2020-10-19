@@ -20,8 +20,7 @@ def parse_args(argv):
     return parser.parse_args(argv)
 
 
-def main():
-    parsed_args = parse_args(argv[1:])
+def change_files_name_format(parsed_args):
     directory = path.realpath(parsed_args.directory)
     prefix = parsed_args.prefix
     dry_run = parsed_args.dry_run
@@ -46,6 +45,10 @@ def main():
             continue
 
         rename(full_path, path.join(directory, new_file_name))
+
+
+def main():
+    change_files_name_format(parse_args(argv[1:]))
 
 
 if __name__ == '__main__':
