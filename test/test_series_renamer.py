@@ -11,15 +11,11 @@ class MockedUserInput:
         self.files_extension = ".txt"
 
 
-class SeriesRenamerTestsBaseClass(TestCase):
+class SeriesRenamerTestsBaseClass:
     @classmethod
     def setUpClass(cls):
         cls.single_digit_number_of_episodes = 7
         cls.multiple_digits_number_of_episodes = 77
-
-    def setUp(self):
-        self.setUpPyfakefs()
-        self.is_input_invalid = False
 
     def build_checked_file_path(self, file_index):
         return f"{self.user_input.directory}file{file_index}{self.user_input.files_extension}"
@@ -58,58 +54,48 @@ class SeriesRenamerTestsBaseClass(TestCase):
         self.is_input_invalid = True
         self.user_input.directory = "5"
 
+    def test_single_digit_episodes(self):
+        self.create_input_files(self.single_digit_number_of_episodes)
+        change_files_name_format(self.user_input)
+        self.validate_format_change(self.single_digit_number_of_episodes)
 
-class TestSeriesRenamerNotInDryMode(SeriesRenamerTestsBaseClass):
+    def test_single_digit_episodes_with_invalid_directory(self):
+        self.add_invalid_directory()
+        self.create_input_files(self.single_digit_number_of_episodes)
+        change_files_name_format(self.user_input)
+        self.validate_format_change(self.single_digit_number_of_episodes)
+
+    def test_multiple_digits_episodes(self):
+        self.create_input_files(self.multiple_digits_number_of_episodes)
+        change_files_name_format(self.user_input)
+        self.validate_format_change(self.multiple_digits_number_of_episodes)
+
+    def test_multiple_digits_episodes_with_invalid_directory(self):
+        self.add_invalid_directory()
+        self.create_input_files(self.multiple_digits_number_of_episodes)
+        change_files_name_format(self.user_input)
+        self.validate_format_change(self.multiple_digits_number_of_episodes)
+
+
+class TestSeriesRenamerNotInDryMode(TestCase, SeriesRenamerTestsBaseClass):
+    @classmethod
+    def setUpClass(cls):
+        TestCase.setUpClass()
+        SeriesRenamerTestsBaseClass.setUpClass()
+
     def setUp(self):
-        SeriesRenamerTestsBaseClass.setUp(self)
+        self.setUpPyfakefs()
+        self.is_input_invalid = False
         self.user_input = MockedUserInput("/test/", "family_matters", False)
 
-    def test_single_digit_episodes(self):
-        self.create_input_files(self.single_digit_number_of_episodes)
-        change_files_name_format(self.user_input)
-        self.validate_format_change(self.single_digit_number_of_episodes)
 
-    def test_single_digit_episodes_with_invalid_directory(self):
-        self.add_invalid_directory()
-        self.create_input_files(self.single_digit_number_of_episodes)
-        change_files_name_format(self.user_input)
-        self.validate_format_change(self.single_digit_number_of_episodes)
+class TestSeriesRenamerInDryMode(TestCase, SeriesRenamerTestsBaseClass):
+    @classmethod
+    def setUpClass(cls):
+        TestCase.setUpClass()
+        SeriesRenamerTestsBaseClass.setUpClass()
 
-    def test_multiple_digits_episodes(self):
-        self.create_input_files(self.multiple_digits_number_of_episodes)
-        change_files_name_format(self.user_input)
-        self.validate_format_change(self.multiple_digits_number_of_episodes)
-
-    def test_multiple_digits_episodes_with_invalid_directory(self):
-        self.add_invalid_directory()
-        self.create_input_files(self.multiple_digits_number_of_episodes)
-        change_files_name_format(self.user_input)
-        self.validate_format_change(self.multiple_digits_number_of_episodes)
-
-
-class TestSeriesRenamerInDryMode(SeriesRenamerTestsBaseClass):
     def setUp(self):
-        SeriesRenamerTestsBaseClass.setUp(self)
+        self.setUpPyfakefs()
+        self.is_input_invalid = False
         self.user_input = MockedUserInput("/dry_test/", "the_office", True)
-
-    def test_single_digit_episodes(self):
-        self.create_input_files(self.single_digit_number_of_episodes)
-        change_files_name_format(self.user_input)
-        self.validate_format_change(self.single_digit_number_of_episodes)
-
-    def test_single_digit_episodes_with_invalid_directory(self):
-        self.add_invalid_directory()
-        self.create_input_files(self.single_digit_number_of_episodes)
-        change_files_name_format(self.user_input)
-        self.validate_format_change(self.single_digit_number_of_episodes)
-
-    def test_multiple_digits_episodes(self):
-        self.create_input_files(self.multiple_digits_number_of_episodes)
-        change_files_name_format(self.user_input)
-        self.validate_format_change(self.multiple_digits_number_of_episodes)
-
-    def test_multiple_digits_episodes_with_invalid_directory(self):
-        self.add_invalid_directory()
-        self.create_input_files(self.multiple_digits_number_of_episodes)
-        change_files_name_format(self.user_input)
-        self.validate_format_change(self.multiple_digits_number_of_episodes)
