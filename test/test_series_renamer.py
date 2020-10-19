@@ -1,6 +1,6 @@
 from pyfakefs.fake_filesystem_unittest import TestCase
 import os
-from src.main import change_series_episodes_names
+from src.main import change_files_name_format
 
 
 class MockedUserInput:
@@ -37,11 +37,11 @@ class TestSeriesRenamerNotInDryMode(TestCase):
     def test_single_digit_episodes(self):
         number_of_checked_episodes = 6
         self.create_input_files(number_of_checked_episodes)
-        change_series_episodes_names(self.user_input)
+        change_files_name_format(self.user_input)
         self.validate_format_change(number_of_checked_episodes)
 
     def test_multiple_digits_episodes(self):
         number_of_checked_episodes = 77
         self.create_input_files(number_of_checked_episodes)
-        change_series_episodes_names(self.user_input)
+        change_files_name_format(self.user_input)
         self.validate_format_change(number_of_checked_episodes)
