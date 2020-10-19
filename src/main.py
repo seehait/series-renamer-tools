@@ -1,27 +1,12 @@
-from argparse import ArgumentParser
 from math import ceil, log10
 from os import listdir, path, rename
 from pathlib import Path
 from sys import argv
+from src.utils import parse_args
 
 from natsort import natsorted
 
 FIRST_EPISODE_NUMBER = 1
-
-
-def parse_args(argv):
-    parser = ArgumentParser(
-        description='Series Renamer: rename files of series with respect to episode number.')
-    parser.add_argument('--directory', '-d', dest='directory',
-                        metavar='[path/to/target/directory]', type=str, required=False, default='.', help='path to target directory')
-    parser.add_argument('--prefix', '-p', dest='prefix',
-                        metavar='[Series Name S01 E]', type=str, required=True, help='name prefix before episode number')
-    parser.add_argument('--dry-run', '-dr', dest='dry_run',
-                        action='store_true', help='dry run')
-
-    parsed_args = parser.parse_args(argv)
-    parsed_args.directory = path.realpath(parsed_args.directory)
-    return parsed_args
 
 
 def calculate_new_file_name(prefix, full_path, current_episode, episode_precision):
