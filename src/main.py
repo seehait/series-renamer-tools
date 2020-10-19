@@ -20,13 +20,25 @@ def parse_args(argv):
     return parser.parse_args(argv)
 
 
+def calculate_new_file_name(prefix, full_path, current_episode, episode_precision):
+    extension = Path(full_path).suffix
+    formatted_episode_number = f"{current_episode}".zfill(
+        episode_precision)
+
+    return f"{prefix}{formatted_episode_number}{extension}"
+
+
+def calculate_episode_precision(file_names):
+    return ceil(log10(len(file_names) + 1))
+
+
 def change_files_name_format(parsed_args):
     directory = path.realpath(parsed_args.directory)
     prefix = parsed_args.prefix
     dry_run = parsed_args.dry_run
 
     file_names = natsorted(listdir(directory))
-    episode_precision = ceil(log10(len(file_names) + 1))
+    episode_precision = calculate_episode_precision(file_names)
     current_episode = 1
 
     for file_name in file_names:
@@ -34,11 +46,8 @@ def change_files_name_format(parsed_args):
         if not path.isfile(full_path):
             continue
 
-        extension = Path(full_path).suffix
-        formatted_episode_number = f"{current_episode}".zfill(
-            episode_precision)
+        new_file_name = calculate_new_file_name(prefix, full_path, current_episode, episode_precision)
         current_episode += 1
-        new_file_name = f"{prefix}{formatted_episode_number}{extension}"
         print(f"{file_name}\t=>\t{new_file_name}")
 
         if dry_run:
