@@ -27,18 +27,45 @@ class SeriesRenamerTestsBaseClass(TestCase):
             self.fs.create_file(file_path)
             self.assertTrue(path.exists(file_path))
 
+    def validate_new_file_creation(self, episode_number, file_index):
+        original_file_path = self.build_checked_file_path(file_index)
+        updated_file_path = self.build_expected_file_path(episode_number)
+        if self.user_input.dry_run:
+            self.assertTrue(path.exists(original_file_path))
+            self.assertFalse(path.exists(updated_file_path))
+        else:
+            self.assertFalse(path.exists(original_file_path))
+            self.assertTrue(path.exists(updated_file_path))
+
+    def validate_format_change(self, number_of_files):
+        number_of_expected_file_digits = len(str(number_of_files))
+        for file_index in range(number_of_files):
+            episode_number = f"{file_index + 1}".zfill(number_of_expected_file_digits)
+            self.validate_new_file_creation(episode_number, file_index)
+
 
 class TestSeriesRenamerNotInDryMode(SeriesRenamerTestsBaseClass):
     @classmethod
     def setUpClass(cls):
         cls.user_input = MockedUserInput("/test/", "family_matters", False)
 
-    def validate_format_change(self, number_of_files):
-        number_of_expected_file_digits = len(str(number_of_files))
-        for file_index in range(number_of_files):
-            episode_number = f"{file_index + 1}".zfill(number_of_expected_file_digits)
-            self.assertFalse(path.exists(self.build_checked_file_path(file_index)))
-            self.assertTrue(path.exists(self.build_expected_file_path(episode_number)))
+    def test_single_digit_episodes(self):
+        number_of_checked_episodes = 6
+        self.create_input_files(number_of_checked_episodes)
+        change_files_name_format(self.user_input)
+        self.validate_format_change(number_of_checked_episodes)
+
+    def test_multiple_digits_episodes(self):
+        number_of_checked_episodes = 77
+        self.create_input_files(number_of_checked_episodes)
+        change_files_name_format(self.user_input)
+        self.validate_format_change(number_of_checked_episodes)
+
+
+class TestSeriesRenamerInDryMode(SeriesRenamerTestsBaseClass):
+    @classmethod
+    def setUpClass(cls):
+        cls.user_input = MockedUserInput("/dry_test/", "the_office", True)
 
     def test_single_digit_episodes(self):
         number_of_checked_episodes = 6
