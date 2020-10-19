@@ -9,6 +9,7 @@ class MockedUserInput:
         self.directory = directory
         self.prefix = prefix
         self.dry_run = is_dry_run
+        self.files_extension = ".txt"
 
 
 class TestSeriesRenamerNotInDryMode(TestCase):
@@ -20,14 +21,17 @@ class TestSeriesRenamerNotInDryMode(TestCase):
         self.setUpPyfakefs()
 
     def build_checked_file_path(self, file_index):
-        return f"{self.user_input.directory}file{file_index}.txt"
+        return f"{self.user_input.directory}file{file_index}{self.user_input.files_extension}"
+
+    def build_expected_file_path(self, episode_number):
+        return self.user_input.directory + self.user_input.prefix + episode_number + self.user_input.files_extension
 
     def validate_format_change(self, number_of_files):
         number_of_expected_file_digits = len(str(number_of_files))
         for file_index in range(number_of_files):
             episode_number = f"{file_index + 1}".zfill(number_of_expected_file_digits)
             self.assertFalse(path.exists(self.build_checked_file_path(file_index)))
-            self.assertTrue(path.exists(f"{self.user_input.directory}{self.user_input.prefix}{episode_number}.txt"))
+            self.assertTrue(path.exists(self.build_expected_file_path(episode_number)))
 
     def create_input_files(self, number_of_files):
         for file_index in range(number_of_files):
