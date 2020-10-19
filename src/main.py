@@ -6,6 +6,8 @@ from sys import argv
 
 from natsort import natsorted
 
+FIRST_EPISODE_NUMBER = 1
+
 
 def parse_args(argv):
     parser = ArgumentParser(
@@ -17,14 +19,15 @@ def parse_args(argv):
     parser.add_argument('--dry-run', '-dr', dest='dry_run',
                         action='store_true', help='dry run')
 
-    return parser.parse_args(argv)
+    parsed_args = parser.parse_args(argv)
+    parsed_args.directory = path.realpath(parsed_args.directory)
+    return parsed_args
 
 
 def calculate_new_file_name(prefix, full_path, current_episode, episode_precision):
     extension = Path(full_path).suffix
     formatted_episode_number = f"{current_episode}".zfill(
         episode_precision)
-
     return f"{prefix}{formatted_episode_number}{extension}"
 
 
@@ -32,28 +35,25 @@ def calculate_episode_precision(file_names):
     return ceil(log10(len(file_names) + 1))
 
 
+def change_file_name_format(file_name, parsed_args, current_episode, episode_precision):
+    full_path = path.join(parsed_args.directory, file_name)
+    if not path.isfile(full_path):
+        return
+
+    new_file_name = calculate_new_file_name(parsed_args.prefix, full_path, current_episode, episode_precision)
+    print(f"{file_name}\t=>\t{new_file_name}")
+
+    if parsed_args.dry_run:
+        return
+    rename(full_path, path.join(parsed_args.directory, new_file_name))
+
+
 def change_files_name_format(parsed_args):
-    directory = path.realpath(parsed_args.directory)
-    prefix = parsed_args.prefix
-    dry_run = parsed_args.dry_run
-
-    file_names = natsorted(listdir(directory))
+    file_names = natsorted(listdir(parsed_args.directory))
     episode_precision = calculate_episode_precision(file_names)
-    current_episode = 1
 
-    for file_name in file_names:
-        full_path = path.join(directory, file_name)
-        if not path.isfile(full_path):
-            continue
-
-        new_file_name = calculate_new_file_name(prefix, full_path, current_episode, episode_precision)
-        current_episode += 1
-        print(f"{file_name}\t=>\t{new_file_name}")
-
-        if dry_run:
-            continue
-
-        rename(full_path, path.join(directory, new_file_name))
+    for current_episode, file_name in enumerate(file_names, FIRST_EPISODE_NUMBER):
+        change_file_name_format(file_name, parsed_args, current_episode, episode_precision)
 
 
 def main():
