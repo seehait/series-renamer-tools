@@ -12,6 +12,11 @@ class MockedUserInput:
 
 
 class SeriesRenamerTestsBaseClass(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.single_digit_number_of_episodes = 7
+        cls.multiple_digits_number_of_episodes = 77
+
     def setUp(self):
         self.setUpPyfakefs()
         self.is_input_invalid = False
@@ -60,30 +65,26 @@ class TestSeriesRenamerNotInDryMode(SeriesRenamerTestsBaseClass):
         self.user_input = MockedUserInput("/test/", "family_matters", False)
 
     def test_single_digit_episodes(self):
-        number_of_checked_episodes = 6
-        self.create_input_files(number_of_checked_episodes)
+        self.create_input_files(self.single_digit_number_of_episodes)
         change_files_name_format(self.user_input)
-        self.validate_format_change(number_of_checked_episodes)
+        self.validate_format_change(self.single_digit_number_of_episodes)
 
     def test_single_digit_episodes_with_invalid_directory(self):
         self.add_invalid_directory()
-        number_of_checked_episodes = 6
-        self.create_input_files(number_of_checked_episodes)
+        self.create_input_files(self.single_digit_number_of_episodes)
         change_files_name_format(self.user_input)
-        self.validate_format_change(number_of_checked_episodes)
+        self.validate_format_change(self.single_digit_number_of_episodes)
 
     def test_multiple_digits_episodes(self):
-        number_of_checked_episodes = 77
-        self.create_input_files(number_of_checked_episodes)
+        self.create_input_files(self.multiple_digits_number_of_episodes)
         change_files_name_format(self.user_input)
-        self.validate_format_change(number_of_checked_episodes)
+        self.validate_format_change(self.multiple_digits_number_of_episodes)
 
     def test_multiple_digits_episodes_with_invalid_directory(self):
         self.add_invalid_directory()
-        number_of_checked_episodes = 77
-        self.create_input_files(number_of_checked_episodes)
+        self.create_input_files(self.multiple_digits_number_of_episodes)
         change_files_name_format(self.user_input)
-        self.validate_format_change(number_of_checked_episodes)
+        self.validate_format_change(self.multiple_digits_number_of_episodes)
 
 
 class TestSeriesRenamerInDryMode(SeriesRenamerTestsBaseClass):
@@ -92,27 +93,23 @@ class TestSeriesRenamerInDryMode(SeriesRenamerTestsBaseClass):
         self.user_input = MockedUserInput("/dry_test/", "the_office", True)
 
     def test_single_digit_episodes(self):
-        number_of_checked_episodes = 6
-        self.create_input_files(number_of_checked_episodes)
+        self.create_input_files(self.single_digit_number_of_episodes)
         change_files_name_format(self.user_input)
-        self.validate_format_change(number_of_checked_episodes)
+        self.validate_format_change(self.single_digit_number_of_episodes)
 
     def test_single_digit_episodes_with_invalid_directory(self):
         self.add_invalid_directory()
-        number_of_checked_episodes = 6
-        self.create_input_files(number_of_checked_episodes)
+        self.create_input_files(self.single_digit_number_of_episodes)
         change_files_name_format(self.user_input)
-        self.validate_format_change(number_of_checked_episodes)
+        self.validate_format_change(self.single_digit_number_of_episodes)
 
     def test_multiple_digits_episodes(self):
-        number_of_checked_episodes = 77
-        self.create_input_files(number_of_checked_episodes)
+        self.create_input_files(self.multiple_digits_number_of_episodes)
         change_files_name_format(self.user_input)
-        self.validate_format_change(number_of_checked_episodes)
+        self.validate_format_change(self.multiple_digits_number_of_episodes)
 
     def test_multiple_digits_episodes_with_invalid_directory(self):
         self.add_invalid_directory()
-        number_of_checked_episodes = 77
-        self.create_input_files(number_of_checked_episodes)
+        self.create_input_files(self.multiple_digits_number_of_episodes)
         change_files_name_format(self.user_input)
-        self.validate_format_change(number_of_checked_episodes)
+        self.validate_format_change(self.multiple_digits_number_of_episodes)
