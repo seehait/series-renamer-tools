@@ -24,10 +24,10 @@ def print_file_name_format_update(old_file_name, new_file_name):
     print(f"{old_file_name}\t=>\t{new_file_name}")
 
 
-def change_file_name_format(file_name, parsed_args, current_episode, episode_precision):
+def change_file_name_format(file_name, parsed_args, episode_number, episode_precision):
     full_path = path.join(parsed_args.directory, file_name)
 
-    new_file_name = calculate_new_file_name(parsed_args.prefix, full_path, current_episode, episode_precision)
+    new_file_name = calculate_new_file_name(parsed_args.prefix, full_path, episode_number, episode_precision)
     print_file_name_format_update(file_name, new_file_name)
 
     if not parsed_args.dry_run:
@@ -42,8 +42,8 @@ def change_files_name_format(parsed_args):
     file_names = natsorted(listdir(parsed_args.directory))
     episode_precision = calculate_episode_precision(file_names)
 
-    for current_episode, file_name in enumerate(file_names, FIRST_EPISODE_NUMBER):
-        change_file_name_format(file_name, parsed_args, current_episode, episode_precision)
+    for episode_number, file_name in enumerate(file_names, FIRST_EPISODE_NUMBER):
+        change_file_name_format(file_name, parsed_args, episode_number, episode_precision)
 
 
 def main():
