@@ -4,6 +4,7 @@ from src.main import change_files_name_format
 
 SINGLE_DIGIT_NUMBER_OF_EPISODES = 7
 MULTIPLE_DIGITS_NUMBER_OF_EPISODES = 77
+FILES_EXTENSION = ".txt"
 
 
 class MockedUserInput:
@@ -11,15 +12,14 @@ class MockedUserInput:
         self.directory = directory
         self.prefix = prefix
         self.dry_run = is_dry_run
-        self.files_extension = ".txt"
 
 
 class SeriesRenamerTestsBaseClass:
     def build_checked_file_path(self, file_index):
-        return f"{self.user_input.directory}file{file_index}{self.user_input.files_extension}"
+        return f"{self.user_input.directory}file{file_index}{FILES_EXTENSION}"
 
     def build_expected_file_path(self, episode_number):
-        return self.user_input.directory + self.user_input.prefix + episode_number + self.user_input.files_extension
+        return self.user_input.directory + self.user_input.prefix + episode_number + FILES_EXTENSION
 
     def create_input_files(self, number_of_files):
         for file_index in range(number_of_files):
