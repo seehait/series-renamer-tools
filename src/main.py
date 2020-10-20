@@ -20,15 +20,11 @@ def calculate_episode_precision(file_names):
     return ceil(log10(len(file_names) + 1))
 
 
-def print_file_name_format_update(old_file_name, new_file_name):
-    print(f"{old_file_name}\t=>\t{new_file_name}")
-
-
 def change_file_name_format(file_name, parsed_args, episode_number, episode_precision):
     full_path = path.join(parsed_args.directory, file_name)
 
     new_file_name = calculate_new_file_name(parsed_args.prefix, full_path, episode_number, episode_precision)
-    print_file_name_format_update(file_name, new_file_name)
+    print(f"{file_name}\t=>\t{new_file_name}")
 
     if not parsed_args.dry_run:
         rename(full_path, path.join(parsed_args.directory, new_file_name))
