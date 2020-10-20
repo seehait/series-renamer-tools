@@ -1,10 +1,13 @@
 from pyfakefs.fake_filesystem_unittest import TestCase
 from os import path
-from src.main import change_files_name_format, calculate_new_file_name, calculate_episode_precision
+from src.main import change_files_name_format, calculate_new_file_name, calculate_episode_precision,\
+    change_file_name_format
+from mock import patch, call
 
 SINGLE_DIGIT_NUMBER_OF_EPISODES = 7
 MULTIPLE_DIGITS_NUMBER_OF_EPISODES = 77
 FILES_EXTENSION = ".txt"
+FILES_NAME_PREFIX = 'file'
 
 
 class MockedUserInput:
@@ -14,16 +17,17 @@ class MockedUserInput:
         self.dry_run = is_dry_run
 
 
+def build_file_names_collection(original_file_name_prefix, number_of_files):
+    return [original_file_name_prefix + str(file_number) for file_number in range(number_of_files)]
+
+
 class TestSupportingFunctions(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.user_input = MockedUserInput("/additional/tests/", "seinfeld", True)
-        cls.original_file_name_prefix = 'file'
-        cls.original_file_name = f"{cls.original_file_name_prefix}57{FILES_EXTENSION}"
-        cls.full_path = cls.user_input.directory + cls.original_file_name
 
-    def build_file_names_collection(self, number_of_files):
-        return [self.original_file_name_prefix + str(file_number) for file_number in range(number_of_files)]
+        cls.original_file_name = f"{FILES_NAME_PREFIX}57{FILES_EXTENSION}"
+        cls.full_path = cls.user_input.directory + cls.original_file_name
 
     def get_expected_episode_number(self, episode_precision, episode_number):
         return str(episode_number).zfill(episode_precision)
@@ -48,40 +52,45 @@ class TestSupportingFunctions(TestCase):
         self.validate_new_file_name_calculation(calculated_file_name, episode_precision, episode_number)
 
     def test_calculate_single_digit_episode_precision(self):
-        file_names_collection = self.build_file_names_collection(3)
+        file_names_collection = build_file_names_collection(FILES_NAME_PREFIX, 3)
         episode_precision = calculate_episode_precision(file_names_collection)
         expected_precision = 1
         self.assertEqual(expected_precision, episode_precision)
 
     def test_calculate_multiple_digits_episode_precision(self):
-        file_names_collection = self.build_file_names_collection(125)
+        file_names_collection = build_file_names_collection(FILES_NAME_PREFIX, 125)
         episode_precision = calculate_episode_precision(file_names_collection)
         expected_precision = 3
         self.assertEqual(expected_precision, episode_precision)
 
     def test_calculate_border_multiple_digits_episode_precision(self):
-        file_names_collection = self.build_file_names_collection(10)
+        file_names_collection = build_file_names_collection(FILES_NAME_PREFIX, 10)
         episode_precision = calculate_episode_precision(file_names_collection)
         expected_precision = 2
         self.assertEqual(expected_precision, episode_precision)
 
 
 class SeriesRenamerTestsBaseClass:
-    def build_checked_file_path(self, file_index):
-        return f"{self.user_input.directory}file{file_index}{FILES_EXTENSION}"
+    def build_checked_file_path(self, file_name):
+        return self.user_input.directory + file_name + FILES_EXTENSION
 
     def build_expected_file_path(self, episode_number):
         return self.user_input.directory + self.user_input.prefix + episode_number + FILES_EXTENSION
 
-    def create_input_files(self, number_of_files):
-        for file_index in range(number_of_files):
-            file_path = self.build_checked_file_path(file_index)
-            self.fs.create_file(file_path)
-            self.assertTrue(path.exists(file_path))
+    def create_input_file(self, file_name):
+        file_path = self.build_checked_file_path(file_name)
+        print(file_path)
+        self.fs.create_file(file_path)
+        self.assertTrue(path.exists(file_path))
+
+    def create_input_files(self, file_names):
+        for file_name in file_names:
+            self.create_input_file(file_name)
 
     def validate_old_file_name_deletion(self, file_index):
         original_file_path = self.build_checked_file_path(file_index)
         if self.user_input.dry_run or self.is_input_invalid:
+            print(original_file_path)
             self.assertTrue(path.exists(original_file_path))
         else:
             self.assertFalse(path.exists(original_file_path))
@@ -93,38 +102,50 @@ class SeriesRenamerTestsBaseClass:
         else:
             self.assertTrue(path.exists(updated_file_path))
 
-    def validate_format_change(self, number_of_files):
-        number_of_expected_file_digits = len(str(number_of_files))
-        for file_index in range(number_of_files):
-            episode_number = f"{file_index + 1}".zfill(number_of_expected_file_digits)
-            self.validate_old_file_name_deletion(file_index)
-            self.validate_new_file_name_creation(episode_number)
+    def validate_format_change(self, original_file_name, episode_number, episode_precision):
+        episode_number = f"{episode_number}".zfill(episode_precision)
+        self.validate_old_file_name_deletion(original_file_name)
+        self.validate_new_file_name_creation(episode_number)
 
     def add_invalid_directory(self):
         self.is_input_invalid = True
         self.user_input.directory = "5"
 
-    def test_single_digit_episodes(self):
-        self.create_input_files(SINGLE_DIGIT_NUMBER_OF_EPISODES)
-        change_files_name_format(self.user_input)
-        self.validate_format_change(SINGLE_DIGIT_NUMBER_OF_EPISODES)
+    def test_change_file_name_to_single_digit_episode_name(self):
+        file_name = f"{FILES_NAME_PREFIX}55"
+        episode_number = 8
+        episode_precision = 1
+        self.create_input_file(file_name)
+        change_file_name_format(file_name + FILES_EXTENSION, self.user_input, episode_number, episode_precision)
+        self.validate_format_change(file_name, episode_number, episode_precision)
 
-    def test_single_digit_episodes_with_invalid_directory(self):
+    def test_change_file_name_to_multiple_digits_episode_name(self):
+        file_name = f"{FILES_NAME_PREFIX}11"
+        episode_number = 23
+        episode_precision = 2
+        self.create_input_file(file_name)
+        change_file_name_format(file_name + FILES_EXTENSION, self.user_input, episode_number, episode_precision)
+        self.validate_format_change(file_name, episode_number, episode_precision)
+
+    @patch("src.main.change_file_name_format")
+    def test_change_files_name_format(self, mocked_file_name_format_changer):
+        file_names_collection = build_file_names_collection(FILES_NAME_PREFIX, 7)
+        self.create_input_files(file_names_collection)
+        change_files_name_format(self.user_input)
+        expected_episode_precision = 1
+        mocked_file_name_format_changer.assert_has_calls([call(f"{FILES_NAME_PREFIX}{file_index}{FILES_EXTENSION}",
+                                                               self.user_input,
+                                                               file_index + 1,
+                                                               expected_episode_precision)
+                                                          for file_index in range(len(file_names_collection))])
+
+    @patch("src.main.change_file_name_format")
+    def test_change_files_name_format_with_invalid_directory(self, mocked_file_name_format_changer):
         self.add_invalid_directory()
-        self.create_input_files(SINGLE_DIGIT_NUMBER_OF_EPISODES)
+        file_names_collection = build_file_names_collection(FILES_NAME_PREFIX, 4)
+        self.create_input_files(file_names_collection)
         change_files_name_format(self.user_input)
-        self.validate_format_change(SINGLE_DIGIT_NUMBER_OF_EPISODES)
-
-    def test_multiple_digits_episodes(self):
-        self.create_input_files(MULTIPLE_DIGITS_NUMBER_OF_EPISODES)
-        change_files_name_format(self.user_input)
-        self.validate_format_change(MULTIPLE_DIGITS_NUMBER_OF_EPISODES)
-
-    def test_multiple_digits_episodes_with_invalid_directory(self):
-        self.add_invalid_directory()
-        self.create_input_files(MULTIPLE_DIGITS_NUMBER_OF_EPISODES)
-        change_files_name_format(self.user_input)
-        self.validate_format_change(MULTIPLE_DIGITS_NUMBER_OF_EPISODES)
+        mocked_file_name_format_changer.assert_not_called()
 
 
 class TestSeriesRenamerNotInDryMode(TestCase, SeriesRenamerTestsBaseClass):
