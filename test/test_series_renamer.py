@@ -17,6 +17,10 @@ class MockedUserInput:
         self.dry_run = is_dry_run
 
 
+def build_user_input_directory(*directory_components):
+    return path.sep + path.join(*directory_components) + path.sep
+
+
 def build_file_names_collection(original_file_name_prefix, number_of_files):
     return [original_file_name_prefix + str(file_number) for file_number in range(number_of_files)]
 
@@ -26,7 +30,7 @@ class TestSupportingFunctions(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.user_input = MockedUserInput(
-            "/additional/tests/", "seinfeld", True)
+            build_user_input_directory("additional", "tests"), "seinfeld", True)
 
         cls.original_file_name = f"{FILES_NAME_PREFIX}57{FILES_EXTENSION}"
         cls.full_path = cls.user_input.directory + cls.original_file_name
@@ -181,11 +185,11 @@ class TestSeriesRenamerNotInDryMode(TestCase, SeriesRenamerTestsBaseClass):
     def setUp(self):
         self.setUpPyfakefs()
         self.is_input_invalid = False
-        self.user_input = MockedUserInput("/test/", "family_matters", False)
+        self.user_input = MockedUserInput(build_user_input_directory("tests"), "family_matters", False)
 
 
 class TestSeriesRenamerInDryMode(TestCase, SeriesRenamerTestsBaseClass):
     def setUp(self):
         self.setUpPyfakefs()
         self.is_input_invalid = False
-        self.user_input = MockedUserInput("/dry_test/", "the_office", True)
+        self.user_input = MockedUserInput(build_user_input_directory("dry_tests"), "the_office", True)
