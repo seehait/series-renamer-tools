@@ -9,7 +9,8 @@ class TestUtils(unittest.TestCase):
     def setUpClass(cls):
         cls.prefix_name = "wheel_of_fortune"
         cls.non_default_input_directory_suffix = "/parse_test/"
-        cls.non_default_full_input_directory = path.realpath(cls.non_default_input_directory_suffix)
+        cls.non_default_full_input_directory = path.realpath(
+            cls.non_default_input_directory_suffix)
         cls.expected_default_directory = path.dirname(path.realpath(__file__))
         cls.directory_parameter_key = DIRECTORY_PARAMETER_VALID_KEYS[0]
         cls.prefix_parameter_key = PREFIX_PARAMETER_VALID_KEYS[0]
@@ -22,18 +23,23 @@ class TestUtils(unittest.TestCase):
 
     def test_parse_args_with_default_directory_and_dry_run(self):
         user_input = parse_args([self.prefix_parameter_key, self.prefix_name])
-        self.validate_parsed_input_content(user_input, self.expected_default_directory, self.prefix_name, False)
+        self.validate_parsed_input_content(
+            user_input, self.expected_default_directory, self.prefix_name, False)
 
     def test_parse_args_with_default_directory(self):
-        user_input = parse_args([self.prefix_parameter_key, self.prefix_name, self.dry_run_parameter_key])
-        self.validate_parsed_input_content(user_input, self.expected_default_directory, self.prefix_name, True)
+        user_input = parse_args(
+            [self.prefix_parameter_key, self.prefix_name, self.dry_run_parameter_key])
+        self.validate_parsed_input_content(
+            user_input, self.expected_default_directory, self.prefix_name, True)
 
     def test_parse_args_with_default_dry_run(self):
         user_input = parse_args([self.directory_parameter_key, self.non_default_input_directory_suffix,
                                  self.prefix_parameter_key, self.prefix_name])
-        self.validate_parsed_input_content(user_input, self.non_default_full_input_directory, self.prefix_name, False)
+        self.validate_parsed_input_content(
+            user_input, self.non_default_full_input_directory, self.prefix_name, False)
 
     def test_parse_args_with_non_default_parameters(self):
         user_input = parse_args([self.directory_parameter_key, self.non_default_input_directory_suffix,
                                  self.prefix_parameter_key, self.prefix_name, self.dry_run_parameter_key])
-        self.validate_parsed_input_content(user_input, self.non_default_full_input_directory, self.prefix_name, True)
+        self.validate_parsed_input_content(
+            user_input, self.non_default_full_input_directory, self.prefix_name, True)
