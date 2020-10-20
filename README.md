@@ -26,13 +26,13 @@ Bulk changing file names into prettier format.
 ### Installing from PyPI
 
 ```sh
-sudo pip3 install series-renamer-tools
+pip3 install series-renamer-tools
 ```
 
 ### Installing from Git
 
 ```sh
-sudo python3 setup.py install
+python3 setup.py install
 ```
 
 ## Usage

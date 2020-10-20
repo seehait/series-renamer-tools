@@ -8,7 +8,7 @@ setup(
     long_description=open(os.path.join(
         os.path.dirname(__file__), 'README.md')).read(),
     long_description_content_type='text/markdown',
-    version='1.0.3',
+    version='1.0.5',
     packages=find_packages(),
     install_requires=["natsort==7.0.1", "pyfakefs", "mock"],
     url='https://github.com/seehait/series-renamer-tools',
