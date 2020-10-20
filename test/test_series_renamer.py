@@ -48,11 +48,11 @@ class TestSupportingFunctions(TestCase):
         self.episode_number = 5
         self.episode_precision = 1
         # Act
-        calculated_file_name = calculate_new_file_name(self.user_input.prefix, self.full_path, episode_number,
-                                                       episode_precision)
+        calculated_file_name = calculate_new_file_name(self.user_input.prefix, self.full_path, self.episode_number,
+                                                       self.episode_precision)
         # Assert
         self.validate_new_file_name_calculation(
-            calculated_file_name, self.episode_precision, self.episode_number)
+            calculated_file_name)
 
     def test_calculate_new_file_name_with_multiple_digits_episode_precision(self):
         # Arrange
@@ -62,7 +62,7 @@ class TestSupportingFunctions(TestCase):
                                                        self.episode_precision)
         # Assert
         self.validate_new_file_name_calculation(
-            calculated_file_name, self.episode_precision, self.episode_number)
+            calculated_file_name)
 
     def test_calculate_single_digit_episode_precision(self):
         # Arrange
@@ -162,9 +162,9 @@ class SeriesRenamerTestsBaseClass:
         change_files_name_format(self.user_input)
         expected_episode_precision = 1
         mocked_file_name_format_changer.assert_has_calls([call(f"{FILES_NAME_PREFIX}{file_index}{FILES_EXTENSION}",
-                                                               self.user_input,
                                                                file_index + 1,
-                                                               expected_episode_precision)
+                                                               expected_episode_precision,
+                                                               self.user_input)
                                                           for file_index in range(len(file_names_collection))])
 
     @patch("src.main.change_file_name_format")
