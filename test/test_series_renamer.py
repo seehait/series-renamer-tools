@@ -26,7 +26,7 @@ class TestSupportingFunctions(TestCase):
         return [self.original_file_name_prefix + str(file_number) for file_number in range(number_of_files)]
 
     def get_expected_episode_number(self, episode_precision, episode_number):
-        return "0" * (episode_precision - len(str(episode_number))) + str(episode_number)
+        return str(episode_number).zfill(episode_precision)
 
     def validate_new_file_name_calculation(self, calculated_file_name, episode_precision, episode_number):
         expected_episode_number = self.get_expected_episode_number(episode_precision, episode_number)
