@@ -8,9 +8,9 @@ class TestUtils(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.prefix_name = "wheel_of_fortune"
-        cls.non_default_input_directory = "/parse_test/"
-        cls.non_default_full_input_directory = "\parse_test"
-        cls.expected_default_directory = "\\"
+        cls.non_default_directory_component = "parse_test"
+        cls.non_default_input_directory = path.sep + cls.non_default_directory_component + path.sep
+        cls.non_default_full_input_directory = path.join(path.sep, cls.non_default_directory_component)
         cls.directory_parameter_key = DIRECTORY_PARAMETER_VALID_KEYS[0]
         cls.prefix_parameter_key = PREFIX_PARAMETER_VALID_KEYS[0]
         cls.dry_run_parameter_key = DRY_RUN_PARAMETER_VALID_KEYS[0]
@@ -18,11 +18,12 @@ class TestUtils(TestCase):
     def setUp(self):
         self.setUpPyfakefs()
         self.fs.add_real_directory(path.dirname(path.realpath(__file__)))
+        self.expected_default_directory = path.sep
 
     def validate_parsed_input_content(self, user_input, expected_directory, expected_prefix, is_dry_run):
-        self.assertEqual(user_input.directory, expected_directory)
-        self.assertEqual(user_input.prefix, expected_prefix)
-        self.assertEqual(user_input.dry_run, is_dry_run)
+        self.assertEqual(expected_directory, user_input.directory)
+        self.assertEqual(expected_prefix, user_input.prefix)
+        self.assertEqual(is_dry_run, user_input.dry_run)
 
     def test_parse_args_with_default_directory_and_dry_run(self):
         user_input = parse_args([self.prefix_parameter_key, self.prefix_name])
