@@ -36,6 +36,7 @@ def change_file_name_format(file_name, parsed_args, current_episode, episode_pre
 
 def change_files_name_format(parsed_args):
     if not path.isdir(parsed_args.directory):
+        print(f"received invalid directory path: {parsed_args.directory}")
         return
 
     file_names = natsorted(listdir(parsed_args.directory))
