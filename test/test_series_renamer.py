@@ -2,6 +2,9 @@ from pyfakefs.fake_filesystem_unittest import TestCase
 from os import path
 from src.main import change_files_name_format
 
+SINGLE_DIGIT_NUMBER_OF_EPISODES = 7
+MULTIPLE_DIGITS_NUMBER_OF_EPISODES = 77
+
 
 class MockedUserInput:
     def __init__(self, directory, prefix, is_dry_run):
@@ -12,11 +15,6 @@ class MockedUserInput:
 
 
 class SeriesRenamerTestsBaseClass:
-    @classmethod
-    def setUpClass(cls):
-        cls.single_digit_number_of_episodes = 7
-        cls.multiple_digits_number_of_episodes = 77
-
     def build_checked_file_path(self, file_index):
         return f"{self.user_input.directory}file{file_index}{self.user_input.files_extension}"
 
@@ -55,34 +53,29 @@ class SeriesRenamerTestsBaseClass:
         self.user_input.directory = "5"
 
     def test_single_digit_episodes(self):
-        self.create_input_files(self.single_digit_number_of_episodes)
+        self.create_input_files(SINGLE_DIGIT_NUMBER_OF_EPISODES)
         change_files_name_format(self.user_input)
-        self.validate_format_change(self.single_digit_number_of_episodes)
+        self.validate_format_change(SINGLE_DIGIT_NUMBER_OF_EPISODES)
 
     def test_single_digit_episodes_with_invalid_directory(self):
         self.add_invalid_directory()
-        self.create_input_files(self.single_digit_number_of_episodes)
+        self.create_input_files(SINGLE_DIGIT_NUMBER_OF_EPISODES)
         change_files_name_format(self.user_input)
-        self.validate_format_change(self.single_digit_number_of_episodes)
+        self.validate_format_change(SINGLE_DIGIT_NUMBER_OF_EPISODES)
 
     def test_multiple_digits_episodes(self):
-        self.create_input_files(self.multiple_digits_number_of_episodes)
+        self.create_input_files(MULTIPLE_DIGITS_NUMBER_OF_EPISODES)
         change_files_name_format(self.user_input)
-        self.validate_format_change(self.multiple_digits_number_of_episodes)
+        self.validate_format_change(MULTIPLE_DIGITS_NUMBER_OF_EPISODES)
 
     def test_multiple_digits_episodes_with_invalid_directory(self):
         self.add_invalid_directory()
-        self.create_input_files(self.multiple_digits_number_of_episodes)
+        self.create_input_files(MULTIPLE_DIGITS_NUMBER_OF_EPISODES)
         change_files_name_format(self.user_input)
-        self.validate_format_change(self.multiple_digits_number_of_episodes)
+        self.validate_format_change(MULTIPLE_DIGITS_NUMBER_OF_EPISODES)
 
 
 class TestSeriesRenamerNotInDryMode(TestCase, SeriesRenamerTestsBaseClass):
-    @classmethod
-    def setUpClass(cls):
-        TestCase.setUpClass()
-        SeriesRenamerTestsBaseClass.setUpClass()
-
     def setUp(self):
         self.setUpPyfakefs()
         self.is_input_invalid = False
@@ -90,11 +83,6 @@ class TestSeriesRenamerNotInDryMode(TestCase, SeriesRenamerTestsBaseClass):
 
 
 class TestSeriesRenamerInDryMode(TestCase, SeriesRenamerTestsBaseClass):
-    @classmethod
-    def setUpClass(cls):
-        TestCase.setUpClass()
-        SeriesRenamerTestsBaseClass.setUpClass()
-
     def setUp(self):
         self.setUpPyfakefs()
         self.is_input_invalid = False
