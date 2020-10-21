@@ -10,7 +10,8 @@ setup(
     long_description_content_type='text/markdown',
     version='1.0.5',
     packages=find_packages(),
-    install_requires=["natsort==7.0.1", "pyfakefs", "mock"],
+    install_requires=["natsort==7.0.1"],
+    tests_require=["pyfakefs>=4.1.0", "mock==3.0.5"],
     url='https://github.com/seehait/series-renamer-tools',
     entry_points={
         'console_scripts': ['series-renamer=src.main:main'],
