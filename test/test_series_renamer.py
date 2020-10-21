@@ -1,7 +1,6 @@
 from pyfakefs.fake_filesystem_unittest import TestCase
 from os import path
-from src.main import change_files_name_format, calculate_new_file_name, calculate_episode_precision,\
-    change_file_name_format
+from src.main import change_files_name, calculate_new_file_name, calculate_episode_precision, change_file_name
 from mock import patch, call
 
 FILES_EXTENSION = ".txt"
@@ -143,8 +142,8 @@ class SeriesRenamerTestsBaseClass:
         episode_number = 8
         episode_precision = 1
         self.create_input_file(file_name)
-        change_file_name_format(file_name + FILES_EXTENSION,
-                                episode_number, episode_precision, self.user_input)
+        change_file_name(file_name + FILES_EXTENSION,
+                         episode_number, episode_precision, self.user_input)
         self.validate_format_change(
             file_name, episode_number, episode_precision)
 
@@ -153,17 +152,17 @@ class SeriesRenamerTestsBaseClass:
         episode_number = 23
         episode_precision = 2
         self.create_input_file(file_name)
-        change_file_name_format(file_name + FILES_EXTENSION,
-                                episode_number, episode_precision, self.user_input)
+        change_file_name(file_name + FILES_EXTENSION,
+                         episode_number, episode_precision, self.user_input)
         self.validate_format_change(
             file_name, episode_number, episode_precision)
 
-    @patch("src.main.change_file_name_format")
+    @patch("src.main.change_file_name")
     def test_change_files_name_format(self, mocked_file_name_format_changer):
         file_names_collection = build_file_names_collection(
             FILES_NAME_PREFIX, 7)
         self.create_input_files(file_names_collection)
-        change_files_name_format(self.user_input)
+        change_files_name(self.user_input)
         expected_episode_precision = 1
         mocked_file_name_format_changer.assert_has_calls([call(f"{FILES_NAME_PREFIX}{file_index}{FILES_EXTENSION}",
                                                                file_index + 1,
@@ -171,13 +170,13 @@ class SeriesRenamerTestsBaseClass:
                                                                self.user_input)
                                                           for file_index in range(len(file_names_collection))])
 
-    @patch("src.main.change_file_name_format")
+    @patch("src.main.change_file_name")
     def test_change_files_name_format_with_invalid_directory(self, mocked_file_name_format_changer):
         self.add_invalid_directory()
         file_names_collection = build_file_names_collection(
             FILES_NAME_PREFIX, 4)
         self.create_input_files(file_names_collection)
-        change_files_name_format(self.user_input)
+        change_files_name(self.user_input)
         mocked_file_name_format_changer.assert_not_called()
 
 

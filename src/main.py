@@ -20,7 +20,7 @@ def calculate_episode_precision(file_names):
     return ceil(log10(len(file_names) + 1))
 
 
-def change_file_name_format(file_name, episode_number, episode_precision, parsed_args):
+def change_file_name(file_name, episode_number, episode_precision, parsed_args):
     full_path = path.join(parsed_args.directory, file_name)
 
     new_file_name = calculate_new_file_name(
@@ -31,7 +31,7 @@ def change_file_name_format(file_name, episode_number, episode_precision, parsed
         rename(full_path, path.join(parsed_args.directory, new_file_name))
 
 
-def change_files_name_format(parsed_args):
+def change_files_name(parsed_args):
     if not path.isdir(parsed_args.directory):
         print(f"received invalid directory path: {parsed_args.directory}")
         return
@@ -40,12 +40,12 @@ def change_files_name_format(parsed_args):
     episode_precision = calculate_episode_precision(file_names)
 
     for episode_number, file_name in enumerate(file_names, FIRST_EPISODE_NUMBER):
-        change_file_name_format(file_name, episode_number,
-                                episode_precision, parsed_args)
+        change_file_name(file_name, episode_number,
+                         episode_precision, parsed_args)
 
 
 def main():
-    change_files_name_format(parse_args(argv[1:]))
+    change_files_name(parse_args(argv[1:]))
 
 
 if __name__ == '__main__':
